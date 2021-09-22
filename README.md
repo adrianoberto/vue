@@ -47,3 +47,8 @@ scripts: [
     heroku config:set NPM_CONFIG_PRODUCTION=false
 
 
+
+
+# tutoriais
+https://learnvue.co/2020/12/setting-up-your-first-vue3-project-vue-3-0-release/
+https://www.bezkoder.com/vue-3-crud/
