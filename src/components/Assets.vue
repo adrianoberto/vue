@@ -1,28 +1,52 @@
 <template>
 
-    <h1>Assets</h1>
+    <h2>Ações</h2>
 
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Ativo</th>
-                <th scope="col">Tipo</th>
+                <th scope="col">Ativo</th>                
                 <th scope="col">Qte.</th>
-                <th scope="col">Preço Unit.</th>
-                <th scope="col">Preço Total</th>
-                <th scope="col">Corretora</th>
+                <th scope="col">Preço Médio</th>
+                <th scope="col">Patrimônio</th>                
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(asset, index) in assets" :key="index">
+            <tr v-for="(asset, index) in stocks" :key="index">
                 <th scope="row">{{ index }}</th>
-                <td>{{ asset.ticker.tradingCode }}</td>
-                <td>{{ asset.ticker.category.type }}</td>
+                <td>{{ asset._id }}</td>                
                 <td>{{ asset.amount }}</td>
-                <td>R$ {{ asset.unitPrice }}</td>
-                <td>R$ {{ asset.totalPrice }}</td>
-                <td>{{ asset.stockbroker.shortName }}</td>
+                <td>{{ formatMoney(asset.avgPrice) }}</td>
+                <td>{{ formatMoney(asset.totalPrice) }}</td>      
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <h2>Fundos Imobiliários</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Ativo</th>                
+                <th scope="col">Qte.</th>
+                <th scope="col">Preço Médio</th>
+                <th scope="col">Patrimônio</th>                
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(asset, index) in fiis" :key="index">
+                <th scope="row">{{ index }}</th>
+                <td>{{ asset._id }}</td>                
+                <td>{{ asset.amount }}</td>
+                <td>{{ formatMoney(asset.avgPrice) }}</td>
+                <td>{{ formatMoney(asset.totalPrice) }}</td>      
             </tr>
         </tbody>
     </table>
@@ -41,15 +65,27 @@ export default {
   data() {
       return {
           resume: null,
-          assets: []
+          fiis: [],
+          stocks: []
       };
   },
   methods: {
+      formatMoney(value) {
+          var valueRounded = Math.round((value + Number.EPSILON) * 100) / 100;
+          return `R$ ${valueRounded.toFixed(2).toString().replace('.',',')}`
+      },
       getAssets() {
-          WalletDataService.getAssets()
+          WalletDataService.getFIIs()
             .then(response => {
-                this.assets = response.data;
-                console.log(response.data)
+                this.fiis = response.data;                
+            })
+            .catch(e => {
+                console.log(e)
+            });
+
+          WalletDataService.getStocks()
+            .then(response => {
+                this.stocks = response.data;                
             })
             .catch(e => {
                 console.log(e)
